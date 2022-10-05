@@ -1,16 +1,16 @@
-package SWEA1768;
+package swea1768;
 import java.util.Scanner;
 
 class Solution {
-    private final static int N = 4; // ìˆ«ìëŠ” 4ìë¦¬
+    private final static int N = 4; // ?ˆ«??Š” 4?ë¦?
     private final static int MAX_QUERYCOUNT = 1000000;
 
-    private static int digits[] = new int[N]; // 4ìë¦¬ ìˆ«ì
-    private static int digits_c[] = new int[10]; // ballìš© -> ê°™ì€ ìˆ«ìê°€ ìˆê¸´ í•œì§€ í™•ì¸
+    private static int digits[] = new int[N]; // 4?ë¦? ?ˆ«?
+    private static int digits_c[] = new int[10]; // ball?š© -> ê°™ì? ?ˆ«?ê°? ?ˆê¸? ?•œì§? ?™•?¸
 
-    private static int T;  // í…ŒìŠ¤íŠ¸ ì¼€ì´ìŠ¤
+    private static int T;  // ?…Œ?Š¤?Š¸ ì¼??´?Š¤
 
-    private static int querycount; // ì¿¼ë¦¬ í˜¸ì¶œ íšŸìˆ˜
+    private static int querycount; // ì¿¼ë¦¬ ?˜¸ì¶? ?šŸ?ˆ˜
 
     // the value of limit_query will be changed in evaluation
     private final static int limit_query = 2520;
@@ -21,70 +21,70 @@ class Solution {
     }
 
     private static boolean isValid(int guess[]) {
-        // guess[]ëŠ” ë¬¼ì–´ë³´ëŠ” ìˆ«ì, guess_cëŠ” ë¬¼ì–´ë³´ëŠ” ìˆ«ìê°€ ì¤‘ë³µë˜ëŠ”ì§€ í™•ì¸ìš©
+        // guess[]?Š” ë¬¼ì–´ë³´ëŠ” ?ˆ«?, guess_c?Š” ë¬¼ì–´ë³´ëŠ” ?ˆ«?ê°? ì¤‘ë³µ?˜?Š”ì§? ?™•?¸?š©
         int guess_c[] = new int[10];
 
-        // guess_cë¥¼ ì „ë¶€ 0ìœ¼ë¡œ ë§ì¶°ë†“ê³ 
+        // guess_cë¥? ? „ë¶? 0?œ¼ë¡? ë§ì¶°?†“ê³?
         for (int count = 0; count < 10; ++count) guess_c[count] = 0;
-        // ì •ìƒë²”ìœ„ ë‚´ì˜ ìˆ«ìê°€ ì•„ë‹ˆê±°ë‚˜! ì´ë¯¸ í•œë²ˆ ì‚¬ìš©í•œ ìˆ«ìë¼ë©´ valid í•˜ì§€ ì•Šë‹¤!
+        // ? •?ƒë²”ìœ„ ?‚´?˜ ?ˆ«?ê°? ?•„?‹ˆê±°ë‚˜! ?´ë¯? ?•œë²? ?‚¬?š©?•œ ?ˆ«??¼ë©? valid ?•˜ì§? ?•Š?‹¤!
         for (int idx = 0; idx < N; ++idx) {
             if (guess[idx] < 0 || guess[idx] >= 10 || guess_c[guess[idx]] > 0) return false;
-            guess_c[guess[idx]]++; // ì•„ë‹ˆë¼ë©´ ì‚¬ìš©í–ˆë‹¤ê³  í‘œê¸°í•´ì¤ë‹ˆë‹¤.
+            guess_c[guess[idx]]++; // ?•„?‹ˆ?¼ë©? ?‚¬?š©?–ˆ?‹¤ê³? ?‘œê¸°í•´ì¤ë‹ˆ?‹¤.
         }
         return true;
     }
 
     // API : return a result for comparison with digits[] and guess[]
-    // ìƒê°í•˜ëŠ” ìˆ˜ì™€ ë¬¼ì–´ë³´ëŠ” ìˆ˜ë¥¼ ë¹„êµí•˜ëŠ” query í•¨ìˆ˜! ì ê²Œ í˜¸ì¶œí•  ìˆ˜ë¡ ìœ ë¦¬í•˜ë‹¤.
+    // ?ƒê°í•˜?Š” ?ˆ˜?? ë¬¼ì–´ë³´ëŠ” ?ˆ˜ë¥? ë¹„êµ?•˜?Š” query ?•¨?ˆ˜! ? ê²? ?˜¸ì¶œí•  ?ˆ˜ë¡? ?œ ë¦¬í•˜?‹¤.
     public static Result query(int guess[]) {
         Result result = new Result();
 
-        // ì¼ì • ìˆ˜ì¤€ ì´í•˜ë¡œ í˜¸ì¶œí•˜ì§€ ëª»í–ˆìœ¼ë©´, ë•¡ì…ë‹ˆë‹¤.
+        // ?¼? • ?ˆ˜ì¤? ?´?•˜ë¡? ?˜¸ì¶œí•˜ì§? ëª»í–ˆ?œ¼ë©?, ?•¡?…?‹ˆ?‹¤.
         if (querycount >= MAX_QUERYCOUNT) {
             result.strike = -1;
             result.ball = -1;
             return result;
         }
-        // ì•„ë‹ˆë¼ë©´ í˜¸ì¶œí•œ íšŸìˆ˜ ì¶”ê°€í•˜ê³ 
+        // ?•„?‹ˆ?¼ë©? ?˜¸ì¶œí•œ ?šŸ?ˆ˜ ì¶”ê??•˜ê³?
         querycount++;
-        // ë¬¼ì–´ë³´ëŠ” ìˆ«ìê°€ ë§ì´ ë˜ëŠ”ì§€ëŠ” ë³´ê³ , ì•„ë‹ˆë¼ë©´ ìŠ¤íŠ¸ë¼ì´í¬,ë³¼ì„ ê°ê° -1 ë°˜í™˜
+        // ë¬¼ì–´ë³´ëŠ” ?ˆ«?ê°? ë§ì´ ?˜?Š”ì§??Š” ë³´ê³ , ?•„?‹ˆ?¼ë©? ?Š¤?Š¸?¼?´?¬,ë³¼ì„ ê°ê° -1 ë°˜í™˜
         if (!isValid(guess)) {
             result.strike = -1;
             result.ball = -1;
             return result;
         }
 
-        // ì •ìƒì´ë¼ë©´ ì¼ë‹¨ 0ë¶€í„° ì‹œì‘í•´
+        // ? •?ƒ?´?¼ë©? ?¼?‹¨ 0ë¶??„° ?‹œ?‘?•´
         result.strike = 0;
         result.ball = 0;
 
-        // ë¬¼ì–´ë³´ëŠ” ìˆ«ì 4ê°œë¥¼ ë³´ë©´ì„œ
+        // ë¬¼ì–´ë³´ëŠ” ?ˆ«? 4ê°œë?? ë³´ë©´?„œ
         for (int idx = 0; idx < N; ++idx)
             if (guess[idx] == digits[idx])
                 result.strike++;
             else if (digits_c[guess[idx]] > 0)
-                // digits_cëŠ” ballì„ í™•ì¸í•˜ê¸° ìœ„í•œ Array. ë“±ì¥ í–ˆëŠ”ì§€ë‚˜ ë³´ëŠ”ê²ƒ.
+                // digits_c?Š” ball?„ ?™•?¸?•˜ê¸? ?œ„?•œ Array. ?“±?¥ ?–ˆ?Š”ì§??‚˜ ë³´ëŠ”ê²?.
                 result.ball++;
 
         return result;
     }
-    // ì…ë ¥ ë°›ëŠ” í•¨ìˆ˜
+    // ?…? ¥ ë°›ëŠ” ?•¨?ˆ˜
     private static void initialize(Scanner sc) {
-        // ì¼ë‹¨ ìˆ«ì ë“±ì¥ íšŸìˆ˜ 0ìœ¼ë¡œ ì´ˆê¸°í™” í•´ì£¼ê³ 
+        // ?¼?‹¨ ?ˆ«? ?“±?¥ ?šŸ?ˆ˜ 0?œ¼ë¡? ì´ˆê¸°?™” ?•´ì£¼ê³ 
         for (int count = 0; count < 10; ++count) digits_c[count] = 0;
-        // ì™œ ì´ë”°êµ¬ë¡œ ì§œë¥´ëŠ”ê±°ì•¼?
+        // ?™œ ?´?”°êµ¬ë¡œ ì§œë¥´?Š”ê±°ì•¼?
         String input;
         do input = sc.next(); while(input.charAt(0) < '0' || input.charAt(0) > '9');
 
         for (int idx = 0; idx < N; ++idx) {
-            digits[idx] = input.charAt(idx) - '0'; // '0'ì€ ì™œ ë¹¼ëŠ” ê±°ì„?ã… ã… 
+            digits[idx] = input.charAt(idx) - '0'; // '0'?? ?™œ ë¹¼ëŠ” ê±°ì„??… ?… 
             digits_c[digits[idx]]++;
         }
 
         querycount = 0;
     }
 
-    // ì •ë‹µì¸ì§€ í™•ì¸ í•˜ëŠ” í•¨ìˆ˜
+    // ? •?‹µ?¸ì§? ?™•?¸ ?•˜?Š” ?•¨?ˆ˜
     private static boolean check(int guess[]) {
         for (int idx = 0; idx < N; ++idx)
             if (guess[idx] != digits[idx]) return false;
@@ -108,13 +108,13 @@ class Solution {
 
             int guess[] = new int[N];
             usersolution.doUserImplementation(guess);
-            // í‹€ë ¸ë‹¤! ì¿¼ë¦¬ í˜¸ì¶œ íšŸìˆ˜ ë§Œë•…ë¨.
-            // ì´ í‹€ë¦° ê²½ìš°ê°€ ì´í•´ê°€ ì•ˆë˜ëŠ”ë°?? ì™œ ë§Œë•…ì´ ë˜ëŠ”ê±°ì§€??
+            // ??? ¸?‹¤! ì¿¼ë¦¬ ?˜¸ì¶? ?šŸ?ˆ˜ ë§Œë•…?¨.
+            // ?´ ??ë¦? ê²½ìš°ê°? ?´?•´ê°? ?•ˆ?˜?Š”?°?? ?™œ ë§Œë•…?´ ?˜?Š”ê±°ì???
             if (!check(guess)) querycount = MAX_QUERYCOUNT;
-            // ë§ì·„ìœ¼ë©´ ì ìˆ˜ ì¶”ê°€
+            // ë§ì·„?œ¼ë©? ? ?ˆ˜ ì¶”ê?
             if (querycount <= limit_query) total_score++;
             System.out.printf("#%d %d\n", testcase, querycount);
-            // total query íšŸìˆ˜ì— ì§€ê¸ˆ query íšŸìˆ˜ ì¶”ê°€
+            // total query ?šŸ?ˆ˜?— ì§?ê¸? query ?šŸ?ˆ˜ ì¶”ê?
             total_querycount += querycount;
         }
         if (total_querycount > MAX_QUERYCOUNT) total_querycount = MAX_QUERYCOUNT;
