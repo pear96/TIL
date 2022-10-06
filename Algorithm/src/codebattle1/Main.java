@@ -18,6 +18,9 @@ class Solution {
 			if (a[i] != b[i])
 				return a[i] - b[i];
 		}
+		System.out.println(a[i]);
+		System.out.println(b[i]);
+		System.out.println(a[i] == b[i]);
 		return a[i] - b[i];
 	}
 
@@ -56,6 +59,7 @@ class Solution {
 			correctWordN = usersolution.search(id, timestamp, words[wordIdx], correctWord);
 			// 정답 단어의 개수
 			answerWordN = sc.nextInt();
+			System.out.println(m + " 번째  내 반환 값 = " + correctWordN + " 정답 값 = "+answerWordN );
 			
 			for (int i = 0; i < answerWordN; ++i) {
 				// 정답의 개수만큼 문자열을 char[] 로 저장
@@ -70,6 +74,12 @@ class Solution {
 				// 교정된 단어 하나씩 비교
 				for (int i = 0; i < answerWordN; ++i) {
 					boolean isExist = false;
+					System.out.println("-------------------");
+					System.out.println(answerWord[0].length);
+					System.out.println(correctWord[0].length);
+					
+					System.out.println(answerWord[0]);
+					System.out.println(correctWord[0]);
 					
 					for (int j = 0; j < correctWordN ; ++j) {
 						//char[]이랑 char[] 비교
