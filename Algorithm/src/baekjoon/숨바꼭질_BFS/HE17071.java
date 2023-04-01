@@ -1,4 +1,4 @@
-package baekjoon;
+package baekjoon.숨바꼭질_BFS;
 
 import java.io.BufferedReader;
 import java.io.IOException;

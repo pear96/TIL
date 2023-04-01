@@ -1,4 +1,4 @@
-package baekjoon;
+package baekjoon.야구_BFS;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package baekjoon;
+package baekjoon.이진수연산_비트마스킹;
 
 import java.io.BufferedReader;
 import java.io.IOException;

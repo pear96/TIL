@@ -1,4 +1,4 @@
-package baekjoon;
+package baekjoon.여행가자_분리집합;
 
 import java.io.BufferedReader;
 import java.io.IOException;

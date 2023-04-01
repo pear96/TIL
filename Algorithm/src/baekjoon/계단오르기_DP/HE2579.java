@@ -1,4 +1,4 @@
-package baekjoon;
+package baekjoon.계단오르기_DP;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package baekjoon;
+package baekjoon.소수의배수_수학;
 
 import java.io.BufferedReader;
 import java.io.IOException;

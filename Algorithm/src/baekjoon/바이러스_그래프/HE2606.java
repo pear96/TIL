@@ -1,4 +1,4 @@
-package baekjoon;
+package baekjoon.바이러스_그래프;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package baekjoon;
+package baekjoon.저울_그리디;
 
 import java.io.BufferedReader;
 import java.io.IOException;

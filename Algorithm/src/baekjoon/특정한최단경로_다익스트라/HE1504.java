@@ -1,4 +1,4 @@
-package baekjoon;
+package baekjoon.특정한최단경로_다익스트라;
 
 import java.io.BufferedReader;
 import java.io.IOException;

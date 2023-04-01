@@ -1,4 +1,4 @@
-package baekjoon;
+package baekjoon.랜선자르기_이분탐색;
 
 import java.io.BufferedReader;
 import java.io.IOException;

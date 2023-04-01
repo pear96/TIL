@@ -1,4 +1,4 @@
-package baekjoon;
+package baekjoon.알파벳_그래프;
 
 import java.io.BufferedReader;
 import java.io.IOException;
