@@ -1,4 +1,4 @@
-package programmers;
+package programmers.이모티콘할인행사;
 
 import java.util.Arrays;
 
