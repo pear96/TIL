@@ -27,7 +27,6 @@ public class HE1920 {
 				sb.append("0\n");
 			}
 		}
-		System.out.print(nums.toString());
 		System.out.println(sb.toString());
 	}
 
