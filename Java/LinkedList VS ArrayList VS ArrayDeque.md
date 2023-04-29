@@ -17,7 +17,7 @@ Java에서 `LinkedList`와 `ArrayDeque`는 모두 `Queue` 인터페이스를 구
   - 사용 예시: 스택, 큐, 덱 등을 구현할 때
 
 - `LinkedList`
-  - 인터페이스 : `Queue` , `List
+  - 인터페이스 : `Queue` , `List`
   - 내부 구현 방식: 이중 연결 리스트(Double Linked List)
   - 요소 추가/삭제 시간 복잡도: O(1)
   - 임의 접근(인덱스를 사용한 요소 검색 등) 시간 복잡도: O(n)
