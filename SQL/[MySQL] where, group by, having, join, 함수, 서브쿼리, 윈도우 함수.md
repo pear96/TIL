@@ -268,6 +268,45 @@ ON A.COL = B.COL
 
 
 
+## [4. CROSS JOIN](https://www.mysqltutorial.org/mysql-cross-join/)
+
+- 두 테이블의 모든 행을 조합한다. A테이블의 행이 N개이고, B테이블의 행이 M개이면 결과는 N*M개이다.
+- Cartesian product와 같은 말이다.
+- 다른 조인과 달리 어떤 column을 기준으로 join할 것인지 조건을 정하지 않는다. 만약 `where` 절을 사용하여 `t1.id = t2.id` 를 한다면 inner join과 같은 결과가 나온다.
+
+```sql
+SELECT * FROM t1
+CROSS JOIN t2;
+```
+
+
+
+# [5. SELF JOIN](https://www.mysqltutorial.org/mysql-self-join/)
+
+- 테이블 자신 자체와 JOIN하는 방법이다. 
+
+- 행을 동일한 테이블 내의 다른 행과 비교하는데 사용한다.
+- 단일 쿼리에서 동일한 테이블 이름을 두번 반복하지 않도록 ALIAS를 설정해야한다. (안하면 오류 발생)
+
+- `INNER JOIN` 또는 `LEFT JOIN`으로 구현한다. 
+
+```sql
+SELECT 
+    c1.city, 
+    c1.customerName, 
+    c2.customerName
+FROM
+    customers c1
+INNER JOIN customers c2 ON 
+    c1.city = c2.city
+    -- 아래 구절은 다른 값을 가진 경우만 찾아낸다.
+    AND c1.customername > c2.customerName
+ORDER BY 
+    c1.city;
+```
+
+
+
 
 
 # 함수
