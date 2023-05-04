@@ -254,7 +254,7 @@ public class HE12100 {
 	}
 	
 	static void right(int step, int[][] board) {
-		int[][] moved = upBlanks(board);
+		int[][] moved = rightBlanks(board);
 		moved = rightCombine(moved);
 		moved = rightBlanks(moved);
 		
