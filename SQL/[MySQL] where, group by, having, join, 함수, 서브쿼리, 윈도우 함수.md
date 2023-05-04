@@ -1,3 +1,7 @@
+[TOC]
+
+
+
 # ⭐ WHERE
 
 - `BETWEEN A AND B`
@@ -281,7 +285,7 @@ CROSS JOIN t2;
 
 
 
-# [5. SELF JOIN](https://www.mysqltutorial.org/mysql-self-join/)
+## [5. SELF JOIN](https://www.mysqltutorial.org/mysql-self-join/)
 
 - 테이블 자신 자체와 JOIN하는 방법이다. 
 
@@ -567,10 +571,41 @@ SELECT, WHERE, ORDER BY 절에 사용 가능하며 각 행에 개별적으로 �
 
 # 윈도우 함수
 
-- `RANK()`: 동일한 값이 있는 경우 동일한 순위 부여. 이후 순위를 건너뛰지 않고 중복된 순위를 부여한다.
-   - EX) 1,2,2,3,4,4,4,5 → 1,2,2,3,4,4,4,5
-   
-- `OVER()` : 행 단위로 윈도우를 지정하여, 윈도우 내 특정 컬럼의 값을 연산. PARTITION BY, ORDER BY, ROWS/RANGE BETWEEN 등의 옵션을 사용하여 윈도우 범위 지정
+윈도우 함수는 각 행에 대해 정의된 "윈도우" 또는 연관된 행의 집합을 기반으로 연산을 수행합니다. 윈도우 함수를 사용하면 복잡한 집계, 순위 및 이동 평균과 같은 연산을 쉽게 처리할 수 있으며, 데이터 분석에 매우 유용한 도구입니다.
+
+```sql
+<window_function> (<expression>) OVER (
+    [PARTITION BY <partition_expression>]
+    [ORDER BY <order_expression> [ASC|DESC]]
+    [ROWS|RANGE <frame_extent>]
+)
+```
+
+1. `<window_function>`: 사용하려는 윈도우 함수입니다. 예를 들어, `SUM`, `AVG`, `ROW_NUMBER`, `RANK`, `DENSE_RANK`, `NTILE`, `LEAD`, `LAG` 등이 있습니다. 집계함수처럼 작동하지만, 집계함수는 결과를 하나의 행으로 반환하는데에 비해 윈도우 함수는 계산이 수행된 모든 행을 반환합니다.
+2. `<expression>`: 윈도우 함수에 대한 입력값입니다. 일반적으로 열 이름이나 계산식을 사용합니다.
+3. `PARTITION BY`: 행을 그룹으로 나누는 데 사용되며, 각 파티션에 대해 윈도우 함수가 개별적으로 수행됩니다. 이 구문은 생략할 수 있습니다.
+4. `ORDER BY`: 윈도우 내에서 행의 순서를 지정하는 데 사용됩니다. 이 구문은 생략할 수 있습니다.
+5. `ROWS|RANGE`: 윈도우 프레임을 정의하는 데 사용되며, 프레임 내의 행에 대해 윈도우 함수가 적용됩니다. 이 구문은 생략할 수 있습니다.
+
+
+
+예제1 )
+
+```sql
+SELECT
+    product_category,
+    order_date,
+    sales,
+    SUM(sales) OVER (PARTITION BY product_category ORDER BY order_date) AS cumulative_sales
+FROM
+    sales_data;
+```
+
+이 쿼리는 `sales_data` 테이블에서 각 `product_category`별 `order_date`에 따라 누적 판매량(cumulative sales)을 계산합니다. 
+
+
+
+예제2)
 
 ```sql
 SELECT REST_ID, REST_NAME, FOOD_TYPE, FAVORITES
@@ -583,6 +618,59 @@ WHERE rank = 1
 ORDER BY FOOD_TYPE DESC;
 ```
 
+- `RANK()`: 동일한 값이 있는 경우 동일한 순위 부여. 이후 순위를 건너뛰지 않고 중복된 순위를 부여한다.
+  - EX) 1,2,2,3,4,4,4,5 → 1,2,2,3,4,4,4,5
+- `OVER()` : 행 단위로 윈도우를 지정하여, 윈도우 내 특정 컬럼의 값을 연산. PARTITION BY, ORDER BY, ROWS/RANGE BETWEEN 등의 옵션을 사용하여 윈도우 범위 지정
 - `RANK()` 와 `OVER()` 함수를 사용하여 FOOD_TYPE 별로 FAVORITES 값을 내림차순으로 정렬하고 각 레코드에 대한 순위를 구함
 - 이를 sub 쿼리로 구성한 후, 메인 쿼리에서 where 절을 이용해 가장 큰 FAVORITES 값을 갖는 레코드 조회
 - 이 방법은 서브쿼리나 JOIN을 사용하는 것보다 가독성이 높으며, 일부 경우에는 더 빠른 성능을 보일 수 있습니다. 하지만 대용량 데이터를 다룰 때는 성능 문제가 발생할 수 있으므로, 적절한 인덱스를 사용하는 것이 중요합니다.
+
+
+
+
+
+# UNION , UNION ALL
+
+MySQL의 `UNION` 연산자는 두 개 이상의 `SELECT` 문을 결합하여 결과 집합을 생성하는 데 사용됩니다. 이 연산자는 각각 다른 `SELECT` 문에서 가져온 행을 **하나의 결과 집합으로 합칠 때 유용**합니다. `UNION`은 중복된 행을 제거하여 결과를 반환합니다. 중복된 행을 포함하고자 할 때는 `UNION ALL`을 사용할 수 있습니다.
+
+`UNION`을 사용하려면 다음 조건이 충족되어야 합니다:
+
+1. 결합하려는 `SELECT` 문의 수가 동일해야 합니다.
+2. 해당 열의 **데이터 형식이 호환**되어야 합니다.
+
+### `UNION` 사용 예제:
+
+```sql
+-- 첫 번째 SELECT 문
+SELECT column1, column2, column3
+FROM table1
+WHERE condition1
+
+-- UNION 연산자를 사용하여 두 번째 SELECT 문과 결합
+UNION
+
+-- 두 번째 SELECT 문
+SELECT column1, column2, column3
+FROM table2
+WHERE condition2;
+```
+
+### `UNION ALL` 사용 예제:
+
+```sql
+SELECT column1, column2, column3
+FROM table1
+WHERE condition1
+
+UNION ALL
+
+SELECT column1, column2, column3
+FROM table2
+WHERE condition2;
+```
+
+참고로 `UNION`을 사용할 때 주의할 점은 다음과 같습니다:
+
+- `UNION`은 기본적으로 **중복된 결과 행을 제거하므로 추가적인 비용이 발생**할 수 있습니다. 가능하면 `UNION ALL`을 사용하여 중복 제거 작업을 건너뛸 수 있습니다.
+- 각 `SELECT` 문의 순서에 따라 결과 집합의 열 이름이 결정됩니다. 첫 번째 `SELECT` 문의 열 이름이 결과 집합의 열 이름으로 사용됩니다. 원하는 열 이름을 지정하려면 첫 번째 `SELECT` 문에서 별칭을 사용하면 됩니다.
+- `UNION`은 각각 다른 `SELECT` 문에서 가져온 행을 결합하기 때문에, 적절한 조건을 설정하여 의도한 결과 집합을 얻는 것이 중요합니다.
