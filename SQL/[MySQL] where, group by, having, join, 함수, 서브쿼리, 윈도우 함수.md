@@ -583,7 +583,9 @@ SELECT, WHERE, ORDER BY 절에 사용 가능하며 각 행에 개별적으로 �
 
 1. `<window_function>`: 사용하려는 윈도우 함수입니다. 예를 들어, `SUM`, `AVG`, `ROW_NUMBER`, `RANK`, `DENSE_RANK`, `NTILE`, `LEAD`, `LAG` 등이 있습니다. 집계함수처럼 작동하지만, 집계함수는 결과를 하나의 행으로 반환하는데에 비해 윈도우 함수는 계산이 수행된 모든 행을 반환합니다.
 2. `<expression>`: 윈도우 함수에 대한 입력값입니다. 일반적으로 열 이름이나 계산식을 사용합니다.
-3. `PARTITION BY`: 행을 그룹으로 나누는 데 사용되며, 각 파티션에 대해 윈도우 함수가 개별적으로 수행됩니다. 이 구문은 생략할 수 있습니다.
+3. `PARTITION BY`: 행을 그룹으로 나누는 데 사용되며, 각 파티션에 대해 윈도우 함수가 개별적으로 수행됩니다. 이 구문은 생략할 수 있습니다. 
+   - `PARITION BY 컬럼이름 ` 일때, 컬럼에 대해 **개별적**으로 순위를 매깁니다. 예를 들어 `PARITION BY NAME ORDER BY GRADE` 라고 합시다. 그러면 각 NAME이 여러 GRADE값을 갖고 있고, 이에 대해 가장 우선순위의 GRADE 하나만을 가져옵니다.
+   - 따라서 `PARITION BY 컬럼A ORDER BY COUNT(컬럼B)` 를 사용하고 싶다면 `GROUP BY 컬럼A` 가 필욯
 4. `ORDER BY`: 윈도우 내에서 행의 순서를 지정하는 데 사용됩니다. 이 구문은 생략할 수 있습니다.
 5. `ROWS|RANGE`: 윈도우 프레임을 정의하는 데 사용되며, 프레임 내의 행에 대해 윈도우 함수가 적용됩니다. 이 구문은 생략할 수 있습니다.
 
@@ -611,7 +613,8 @@ FROM
 SELECT REST_ID, REST_NAME, FOOD_TYPE, FAVORITES
 FROM (
   SELECT REST_ID, REST_NAME, FOOD_TYPE, FAVORITES,
-    RANK() OVER (PARTITION BY FOOD_TYPE ORDER BY FAVORITES DESC) AS rank
+    RANK() OVER (PARTITION BY FOOD_TYPE ORDER BY FAVORITES DESC) AS rank 
+    -- RANK, rank는 예약어라 사용 금지
   FROM REST_INFO
 ) sub
 WHERE rank = 1
