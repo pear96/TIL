@@ -432,7 +432,7 @@ SELECT, WHERE, ORDER BY 절에 사용 가능하며 각 행에 개별적으로 �
 
 
 
-### 숫자, 수학 함수
+### [숫자, 수학 함수](https://dev.mysql.com/doc/refman/8.0/en/numeric-functions.html)
 
 - `CEILING(숫자)`, `FLOOR(숫자)` , `ROUND(숫자)`
 
@@ -441,6 +441,16 @@ SELECT, WHERE, ORDER BY 절에 사용 가능하며 각 행에 개별적으로 �
 - `POW(숫자1, 숫자2)` , `SQRT(숫자)`
 
 - `RAND()` : 0 ~ 1 무작위 실수
+
+  - i <= R < j
+
+
+  ```sql
+  FLOOR(i + RAND() * (j − i))
+  
+  -- 7 <= R < 12
+  SELECT FLOOR(7 + (RAND() * 5));
+  ```
 
 - `SIGN(숫자)` : 양수면 1, 음수면 -1, 0이면 0
 
@@ -519,6 +529,8 @@ SELECT, WHERE, ORDER BY 절에 사용 가능하며 각 행에 개별적으로 �
 ### NULL 관련 함수
 
 - `SELECT IFNULL(수식1, 수식2)` : 수식1이 NULL이면 수식2를 반환하고, 아니면 수식 1 반환
+
+  `SELECT IFNULL(Column명, "Null일 경우 대체 값") FROM 테이블명; `
 
 - `SELECT NULLIF(수식1, 수식2)` : 수식1과 수식2가 같다면 NULL, 아니라면 수식1 반환
 
@@ -677,3 +689,156 @@ WHERE condition2;
 - `UNION`은 기본적으로 **중복된 결과 행을 제거하므로 추가적인 비용이 발생**할 수 있습니다. 가능하면 `UNION ALL`을 사용하여 중복 제거 작업을 건너뛸 수 있습니다.
 - 각 `SELECT` 문의 순서에 따라 결과 집합의 열 이름이 결정됩니다. 첫 번째 `SELECT` 문의 열 이름이 결과 집합의 열 이름으로 사용됩니다. 원하는 열 이름을 지정하려면 첫 번째 `SELECT` 문에서 별칭을 사용하면 됩니다.
 - `UNION`은 각각 다른 `SELECT` 문에서 가져온 행을 결합하기 때문에, 적절한 조건을 설정하여 의도한 결과 집합을 얻는 것이 중요합니다.
+
+
+
+
+
+
+
+# [WITH](https://www.mysqltutorial.org/mysql-cte/)
+
+> Common Table Expressions
+>
+> 공통 테이블 표현식(CTE)은 단일 쿼리 내에 존재하는 이름이 지정된 임시 결과 집합이며, 나중에 해당 문 내에서 여러 번 참조될 수 있습니다. 쿼리 실행 중에만 저장되기 때문에 임시 결과 입니다.
+>
+> derived table과 달리, 셀프 참조를 할 수 있으며, 한 쿼리 안에서 여러번 참조될 수 있습니다. 또한 가독성이 derived table에 비해 뛰어납니다.
+
+
+
+CTE는 이름, 컬럼 목록과 CTE를 정의하는 쿼리로 구성됩니다. CTE를 정의하고 나면, VIEW로도 사용할 수 있습니다.
+
+```sql
+WITH cte_name (column_list) AS (
+    query
+) 
+SELECT * FROM cte_name;
+```
+
+- `query` 에서 사용하는 컬럼의 수와, `column_list`에 있는 컬럼의 수가 동일해야합니다. `column_list`를 빠트릴 경우, CTE는 `query` 에서 사용하는 컬럼을 사용하게 됩니다.
+
+```sql
+-- select, update, delete에도 사용할 수 있습니다.
+WITH ... SELECT ...
+WITH ... UPDATE ...
+WITH ... DELETE ...
+
+-- 서브쿼리나 derived table subquery로도 사용할 수 있습니다.
+SELECT ... WHERE id IN (WITH ... SELECT ...);
+
+SELECT * FROM (WITH ... SELECT ...) AS derived_table;
+```
+
+
+
+예제1)
+
+```sql
+WITH customers_in_usa AS (
+    SELECT 
+        customerName, state
+    FROM
+        customers
+    WHERE
+        country = 'USA'
+) SELECT 
+    customerName
+ FROM
+    customers_in_usa
+ WHERE
+    state = 'CA'
+ ORDER BY customerName;
+```
+
+- CTE의 이름은 customers_in_usa 입니다. CTE를 정의하는 쿼리는 `customerName` 과 `state`라는 2개의 컬럼을 반환합니다. customers_in_usa는 'USA'에 거주하는 모든 고객의 이름과 주를 표기합니다.
+- CTE를 정의한 뒤, SELECT절에서 캘리포니아에 거주하는 고객들을 찾기위해 참조합니다. (FROM)
+
+
+
+예제2) CTE 2개 사용
+
+```SQL
+WITH salesrep AS (
+    SELECT 
+        employeeNumber,
+        CONCAT(firstName, ' ', lastName) AS salesrepName
+    FROM
+        employees
+    WHERE
+        jobTitle = 'Sales Rep'
+),
+customer_salesrep AS (
+    SELECT 
+        customerName, salesrepName
+    FROM
+        customers
+            INNER JOIN
+        salesrep ON employeeNumber = salesrepEmployeeNumber
+)
+SELECT 
+    *
+FROM
+    customer_salesrep
+ORDER BY customerName;
+```
+
+- `salesrep` 와 `customer_salesrep` 라는 2개의 CTE가 있습니다. customer_salesrep는 salesrep와 join한 결과를 활용합니다. 
+
+
+
+## RECURSIVE
+
+> RECURSIVE CTE는 스스로를 서브쿼리로 참조합니다. 
+
+- CTE 구조의 기본 결과 집합을 구성하는 초기 쿼리입니다. 초기 쿼리 부분을 앵커 멤버라고 합니다. 
+- 재귀 쿼리 부분은 CTE 이름을 참조하는 쿼리이므로 재귀 멤버라고 합니다. 재귀 멤버는 `UNION ALL` 또는 U`NION DISTINCT` 연산자에 의해 앵커 멤버와 조인됩니다. 
+- 재귀 멤버가 행을 반환하지 않을 때 재귀가 중지되도록 하는 종료 조건입니다.
+- 집계 함수, `GROUP BY`, `ORDER BY` , `LIMIT` , `DISTICT` 를 사용할 수 없습니다. 앵커 멤버에 적용되지 않습니다.
+- 만약 `UNION` 을 사용할 때는 `DISTINCT`를 사용할 수 없지만, `UNION DISTINCT` 를 사용하면 가능합니다.
+- 또한 `FROM` 절에서만 스스로를 참조할 수 있습니다. (서브쿼리 X)
+
+
+
+```sql
+WITH RECURSIVE cte_name AS (
+    initial_query  -- anchor member
+    UNION ALL
+    recursive_query -- recursive member that references to the CTE name
+)
+SELECT * FROM cte_name;
+```
+
+1. 먼저 멤버를 앵커 멤버와 재귀 멤버로 분리합니다.
+2. 다음으로 앵커 멤버를 실행하여 기본 결과 집합(R0)을 형성하고 이 기본 결과 집합을 다음 반복에 사용합니다.
+3. 그런 다음 Ri 결과를 입력으로 하여 재귀 멤버를 실행하고 Ri+1을 출력으로 만듭니다.
+4. 그런 다음 재귀 멤버가 빈 결과 집합을 반환할 때까지, 즉 종료 조건이 충족될 때까지 세 번째 단계를 반복합니다.
+5. 마지막으로 UNION ALL 연산자를 사용하여 R0에서 Rn까지 결과 집합을 결합합니다.
+
+
+
+예제1)
+
+```SQL
+WITH RECURSIVE cte_count (n) 
+AS (
+      SELECT 1 -- anchor member
+      UNION ALL
+      SELECT n + 1 -- 이 밑이 recursive member
+      FROM cte_count 
+      WHERE n < 3
+    )
+SELECT n 
+FROM cte_count;
+```
+
+- SELECT 1 로 인해 1이 기본 결과로 앵커 멤버가 됩니다.
+- 이후 `cte_count` 라는 CTE를 참조하기 때문에 recursive member가 됩니다.
+- `n < 3` 은 recursive의 종료 조건입니다.
+
+![MySQL Recursive CTE](https://www.mysqltutorial.org/wp-content/uploads/2017/07/MySQL-Recursive-CTE.png)
+
+1. 먼저 앵커 멤버와 재귀 멤버를 분리합니다.
+2. 다음으로 앵커 멤버는 초기 행( SELECT 1)을 형성하므로 첫 번째 반복은 n = 1인 1 + 1 = 2를 생성합니다.
+3. 그런 다음 두 번째 반복은 첫 번째 반복(2)의 출력에서 작동하고 n = 2인 2 + 1 = 3을 생성합니다.
+4. 그 후 세 번째 연산(n = 3) 전에 종료 조건(n < 3)을 만족하므로 쿼리가 중지됩니다.
+5. 마지막으로 UNION ALL 연산자를 사용하여 모든 결과 집합 1, 2 및 3을 결합합니다.
