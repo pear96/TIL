@@ -14,6 +14,13 @@ public class TestBinary {
 		System.out.println(B);
 		System.out.println(Integer.toBinaryString(B));
 //		System.out.println(Integer.bitCount(B));
+		
+		System.out.println(1 << 0);
+		System.out.println(1 << 1);
+		System.out.println(1 << 2);
+		System.out.println(1 >> 2);
+		System.out.println(1 >> 1);
+		System.out.println(1 >> 0);
 	}
 
 }
