@@ -1,4 +1,4 @@
-package 분할정복;
+package 투포인터;
 
 // https://www.acmicpc.net/problem/11728
 
