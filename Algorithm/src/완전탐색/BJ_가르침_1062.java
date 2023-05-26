@@ -50,9 +50,6 @@ public class BJ_가르침_1062 {
 			
 			// 안 배웠다면 배워본다.
 			learned[idx] = true;
-			// 이미 learned[idx]에 체크한 본인을 넘어갈 수 없어 아쉽겠지만
-			// idx+1로 하면 idx=25일때 for문이 안돌아서 z를 못 본다.
-			// 그렇다고 idx < 27로 하면 Index 에러 나겠지?^^
 			makeAlphaComb(cnt+1, idx);
 			// 다른 조합을 위해 false 처리를 진행한다.
 			learned[idx] = false;
