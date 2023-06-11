@@ -13,26 +13,30 @@ public class BJ_용액_2467 {
 	
 	static void binary () {
 		int leastGap = Integer.MAX_VALUE;
-		
+		//  [-99, -2, -1, 4, 98]
 		// liquid 하나씩 보면서, 짝지를 찾아준다.
         for(int l = 0; l < N-1; l++) {
-            // 나와 반대부호를 가진 값과 가장 근사한 것을 찾는다.
             int now = liquid[l];
+            // 내 다음부터 끝까지 보고
             int low = l+1, high = N - 1;
             int mid;
 
             while(low <= high) {
                 mid = (low + high) / 2;
-
+                
+                // 갭이 더 작으면 업데이트
                 if (leastGap > Math.abs(now + liquid[mid])) {
                     leastGap = Math.abs(now + liquid[mid]);
                     answer[0] = now;
                     answer[1] = liquid[mid];
                 }
-
+                
+                // 합이 - 면 더 큰 용액이랑 섞엇을 때 0에 가까워질 수 있으니깐
+                // 용액이 정렬되어있으므로, low값 올려보는 시도 함.
                 if (now + liquid[mid] <= 0) {
                     low = mid + 1;
                 } else {
+                	// 합이 + 면 더 작은 용액이랑 섞었을 때 0에 가까워질 수 있으니깐 high값 내려봄.
                     high = mid - 1;
                 }
             }
