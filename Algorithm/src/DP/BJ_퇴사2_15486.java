@@ -36,7 +36,6 @@ public class BJ_퇴사2_15486 {
 		for(int day = N-1; day >= 0 ; day--) {
 			dp[day] = dp[day+1];
 			if (day + t[day] <= N) {
-//				System.out.println("day : " + day + ", day-t[day] : " + (day-t[day]) + ", dp[day - t[day] : " + (dp[day - t[day]]) + ", p[day] : " + p[day] + ", dp[day] : " + dp[day]);
 				dp[day] = Math.max(dp[day], p[day] + dp[day + t[day]]);
 			}
 		}
