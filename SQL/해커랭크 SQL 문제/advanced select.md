@@ -142,3 +142,36 @@ FROM (
 ) AS R
 ```
 
+
+
+
+
+### New Companies
+
+- 회사 코드, Founder 이름, 리드 매니저의 총 인원 수, 시니어 매니저의 총 인원 수, 매니저 총 인원 수, 사원 총 인원 수를 출력해라. 회사 코드에 맞춰 오름차순 정렬해라.
+
+- 중복이 포함된 테이블이 있을 수 있다.
+
+- 회사 코드는 문자열이므로 숫자 순으로 정렬하지 말아라
+
+- 주어지는 테이블 정보
+
+  1. `Company` : 회사 코드 / founder 이름
+  2. `Lead Manager` : 리드 매니저 코드 / 회사 코드
+  3. `Senior Manager` : 시니어 매니저 코드 / 리드 매니저 코드 / 회사 코드
+  4. `Manager` : 매니저 코드 / 시니어 매니저 코드 / 리드 매니저 코드 / 회사 코드
+  5. `Employee` : 사원 코드 / 매니저 코드 / 시니어 매니저 코드 / 리드 매니저 코드 / 회사 코드
+
+  ```SQL
+  SELECT C.company_code, C.founder, 
+      COUNT(DISTINCT E.lead_manager_code),
+      COUNT(DISTINCT E.senior_manager_code),
+      COUNT(DISTINCT E.manager_code),
+      COUNT(DISTINCT E.employee_code)
+  FROM EMPLOYEE E
+  JOIN COMPANY C USING (COMPANY_CODE)
+  GROUP BY 1, 2
+  ORDER BY C.COMPANY_CODE
+  ```
+
+  
