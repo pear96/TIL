@@ -64,7 +64,7 @@ GROUP BY R;
 1. **서브쿼리**:
 
 ```sql
-sqlCopy codeSELECT ROW_NUMBER() OVER (PARTITION BY OCCUPATION ORDER BY NAME)
+SELECT ROW_NUMBER() OVER (PARTITION BY OCCUPATION ORDER BY NAME)
 AS R, NAME, OCCUPATION
 FROM OCCUPATIONS
 ```
@@ -73,7 +73,9 @@ FROM OCCUPATIONS
 
 - `ROW_NUMBER() OVER (PARTITION BY OCCUPATION ORDER BY NAME) AS R`: 직업(OCCUPATION)으로 그룹을 나눈 후 이름(NAME) 순서로 정렬하여 각 직업별로 행 번호를 부여합니다.
 
-1. **CASE 문**:
+
+
+2. **CASE 문**:
 
 ```sql
 MAX(CASE WHEN OCCUPATION = 'Doctor' THEN NAME END)
@@ -81,7 +83,21 @@ MAX(CASE WHEN OCCUPATION = 'Doctor' THEN NAME END)
 
 이 구문은 OCCUPATION 필드의 값이 'Doctor'일 경우 해당 NAME 값을 반환합니다. 다른 직업에 대해서도 유사한 CASE 문이 존재합니다. 이렇게 함으로써 각 직업에 대한 이름 값을 열(column)에 배치할 수 있게 됩니다.
 
-1. **GROUP BY**:
+`MAX` 함수는 특정 조건을 만족하는 값들 중에서 '최대' 값을 선택하는 기능을 하지만, 이 쿼리의 맥락에서는 **특정 조건을 만족하는 유일한 값을 선택**하는 데 사용됩니다.
+
+`GROUP BY R` 구문으로 인해, 각 행 번호(`R`)에 대한 직업의 이름이 그룹화됩니다. 그리고 `CASE` 문은 특정 직업의 이름만을 선택합니다. 즉, 각 그룹과 조건에 따라 선택된 값은 딱 하나이므로, `MAX` 함수는 그 하나의 값을 반환하는 역할을 합니다.
+
+예를 들어, 'Doctor'에 대한 `CASE` 문에서 `R=1`인 그룹에서는 `Doctor`의 첫 번째 이름만 선택되고 나머지 값은 `NULL`이 됩니다. `MAX` 함수는 이 그룹에서 `NULL`이 아닌 유일한 값을 반환합니다.
+
+이러한 방식으로 `MAX` 함수는 각 그룹 내에서 `CASE` 문에 의해 선택된 값을 반환하는 역할을 합니다.
+
+`MAX` 함수를 사용하는 방식은 피벗 작업을 위한 효율적이고 간결한 방법 중 하나입니다. 다른 방식도 가능하지만, 사용하는 데이터베이스 시스템과 특정 상황에 따라 가장 적합한 방법이 달라질 수 있습니다.
+
+> `MAX` 대신 `MIN`을 써도 가능하다!
+
+
+
+3. **GROUP BY**:
 
 ```SQL
 GROUP BY R
@@ -100,3 +116,62 @@ GROUP BY R
 | ...    | ...       | ...    | ...   |
 
 이 쿼리를 사용하면 OCCUPATIONS 테이블의 데이터를 직업별로 정렬하여 알아보기 쉬운 형태로 변환할 수 있습니다.
+
+
+
+
+
+### Binary Tree Nodes
+
+- 노드의 값(N)과 해당 노드의 부모의 값(P)이 주어진다.
+- 노드의 값을 Root (부모가 없음), Leaf(자식이 없음), Inner(그외) 타입과 함께 노드 값 오름차순으로 출력해라
+
+```sql
+SELECT R.V, CASE
+    WHEN R.P IS NULL THEN 'Root'
+    WHEN R.C IS NULL THEN 'Leaf'
+    ELSE 'Inner'
+    END
+FROM (
+    SELECT A.N AS V, MAX(A.P) AS P, MAX(B.N) AS C
+    FROM BST AS A
+    LEFT JOIN BST AS B
+    ON A.N = B.P
+    GROUP BY V
+    ORDER BY V
+) AS R
+```
+
+
+
+
+
+### New Companies
+
+- 회사 코드, Founder 이름, 리드 매니저의 총 인원 수, 시니어 매니저의 총 인원 수, 매니저 총 인원 수, 사원 총 인원 수를 출력해라. 회사 코드에 맞춰 오름차순 정렬해라.
+
+- 중복이 포함된 테이블이 있을 수 있다.
+
+- 회사 코드는 문자열이므로 숫자 순으로 정렬하지 말아라
+
+- 주어지는 테이블 정보
+
+  1. `Company` : 회사 코드 / founder 이름
+  2. `Lead Manager` : 리드 매니저 코드 / 회사 코드
+  3. `Senior Manager` : 시니어 매니저 코드 / 리드 매니저 코드 / 회사 코드
+  4. `Manager` : 매니저 코드 / 시니어 매니저 코드 / 리드 매니저 코드 / 회사 코드
+  5. `Employee` : 사원 코드 / 매니저 코드 / 시니어 매니저 코드 / 리드 매니저 코드 / 회사 코드
+
+  ```SQL
+  SELECT C.company_code, C.founder, 
+      COUNT(DISTINCT E.lead_manager_code),
+      COUNT(DISTINCT E.senior_manager_code),
+      COUNT(DISTINCT E.manager_code),
+      COUNT(DISTINCT E.employee_code)
+  FROM EMPLOYEE E
+  JOIN COMPANY C USING (COMPANY_CODE)
+  GROUP BY 1, 2
+  ORDER BY C.COMPANY_CODE
+  ```
+
+  
