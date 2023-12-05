@@ -1,4 +1,4 @@
-package _사이트.softeer.lv2.바이러스;
+package 사이트.softeer.lv2.바이러스;
 
 import java.io.BufferedReader;
 import java.io.IOException;

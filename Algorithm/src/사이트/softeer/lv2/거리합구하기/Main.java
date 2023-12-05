@@ -1,4 +1,4 @@
-package _사이트.softeer.lv2.거리합구하기;
+package 사이트.softeer.lv2.거리합구하기;
 
 import java.io.BufferedReader;
 import java.io.IOException;

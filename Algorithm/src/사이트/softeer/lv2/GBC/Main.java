@@ -1,4 +1,4 @@
-package _사이트.softeer.lv2.GBC;
+package 사이트.softeer.lv2.GBC;
 
 import java.io.BufferedReader;
 import java.io.IOException;

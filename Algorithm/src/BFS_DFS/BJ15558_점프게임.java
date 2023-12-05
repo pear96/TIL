@@ -1,4 +1,4 @@
-package _사이트.baekjoon;
+package BFS_DFS;
 
 import java.io.BufferedReader;
 import java.io.IOException;
