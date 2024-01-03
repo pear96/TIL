@@ -1,3 +1,9 @@
+https://tecoble.techcourse.co.kr/post/2021-10-23-java-synchronize/
+
+https://steady-coding.tistory.com/556
+
+https://jeong-pro.tistory.com/227
+
 # Synchronization 개념
 
 - synchronization을 쓰는 이유 :  하나의 자원에 하나의 스레드만 접근할 수 있도록 하기 위해서
@@ -142,6 +148,7 @@ public class StaticFunction {
 - 모니터의 단점은 컴파일러가 멀티 프로세스 환경에서 임계 영역에 대한 접근을 관리하기 위해 운영체제에서 어떤 기능을 사용할 수 있는지 알아야한다는 점이다. 
 - 그러나 세마포어, 락과 같은 하위 수준의 동기화보다 높은 추상화로 인해 오버헤드가 많이 발생할 수 있다.
   - 모든 동기화 문제에 적용할 수 있는 것은 아니며, 하위 단계의 추상화가 더 적절할 수 있다.
+- ==자바의 모든 인스턴스는 Monitor 를 가지고 있으며(Object 내부) Monitor 를 통해 Thread 동기화를 수행한다.== 
 - 프로세스간의 상호 배제를 위해 프로그래밍 언어에서 제공되며 Java에서는 ` synchronized` 가 있다.
   1. 특정한 모듈, 패키지안에 통합된 조건 변수 또는 절차이다.
   2. 모니터 외부에서 실행되는 프로세스는 모니터 내부 변수에 접근할 수 없지만, 모니터의 procedures를 호출할 수 있다.
