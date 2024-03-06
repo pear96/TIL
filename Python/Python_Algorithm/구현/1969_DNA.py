@@ -1,3 +1,11 @@
+"""
+2024.03.06
+유형 : 구현, 문자열, 완탐, 그리디
+풀이 시간 : 30분
+
+- 문제를 잘못 이해해서 다시 풀었다...
+- index를 활용하면 dict, list 필요 없다.
+"""
 N, M = map(int, input().split())
 dna = [input() for _ in range(N)]
 to_idx = {"A": 0, "C": 1, "G": 2, "T": 3}
